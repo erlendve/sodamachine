@@ -1,17 +1,13 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace ConsoleApplication1
 {
     internal class Program
     {
-        private static void Main(string[] args)
+        private static void Main()
         {
-            SodaMachine sodaMachine = new SodaMachine();
-            sodaMachine.Start();
+            new SodaMachine().Start();
         }
     }
 
@@ -19,9 +15,59 @@ namespace ConsoleApplication1
     {
         private static int money;
 
-        /// <summary>
-        /// This is the starter method for the machine
-        /// </summary>
+        private static void PrintMenu()
+        {
+            Console.WriteLine("\n\nAvailable commands:");
+            Console.WriteLine("insert (money) - Money put into money slot");
+            Console.WriteLine("order (coke, sprite, fanta) - Order from machines buttons");
+            Console.WriteLine("sms order (coke, sprite, fanta) - Order sent by sms");
+            Console.WriteLine("recall - gives money back");
+            Console.WriteLine("-------");
+            Console.WriteLine("Inserted money: " + money);
+            Console.WriteLine("-------\n\n");
+        }
+        private static void AddToCredit(string input)
+        {
+            var amount = int.Parse(input.Split(' ')[1]);
+            money += amount;
+            Console.WriteLine("Adding " + amount + " to credit");
+        }
+
+        private static void Recall()
+        {
+            Console.WriteLine("Returning " + money + " to customer");
+            money = 0;
+        }
+        private static void Serve(Soda soda)
+        {
+            soda.Amount--;
+            Console.WriteLine($"Giving {soda.Name} out");
+        }
+
+        private static void GiveChange(Soda soda)
+        {
+            Console.WriteLine("Giving " + (money - soda.Price) + " out in change");
+            money = 0;
+        }
+
+        private static void TryToServe(Soda soda, bool prepaid)
+        {
+            if (soda.Amount == 0)
+            {
+                Console.WriteLine($"No {soda.Name} left");
+            }
+            else if (!prepaid && money < soda.Price)
+            {
+                Console.WriteLine("Need " + (soda.Price - money) + " more money");
+            }
+            else
+            {
+                Serve(soda);
+                if (!prepaid)
+                    GiveChange(soda);
+            }
+        }
+
         public void Start()
         {
             var inventory = new[] { new Soda { Name = "coke", Amount = 5, Price = 20 }, new Soda { Name = "sprite", Amount = 3, Price = 15 }, new Soda { Name = "fanta", Amount = 3, Price = 15 } };
@@ -35,70 +81,23 @@ namespace ConsoleApplication1
                     AddToCredit(input);
 
                 if (input.Equals("recall"))
-                {
-                    Console.WriteLine("Returning " + money + " to customer");
-                    money = 0;
-                }
-
-                var sms = false;
-                if (input.StartsWith("sms"))
-                    sms = true;
+                    Recall();
 
                 if (input.Contains("order"))
                 {
-                    var sodaFromInput = input.Split(' ')[sms ? 2 : 1];
+                    var sodaFromInput = input.Split(' ').Last();
 
                     // replaced switch block so inventory can be extended with more soda's
                     var foundSoda = inventory.FirstOrDefault(sodaInInventory => sodaFromInput == sodaInInventory.Name);
                     if (foundSoda == null)
                         Console.WriteLine("No such soda");
                     else
-                        TryToServe(foundSoda, sms);
+                        TryToServe(foundSoda, input.StartsWith("sms"));
                 }
             }
         }
-
-        private void PrintMenu()
-        {
-            Console.WriteLine("\n\nAvailable commands:");
-            Console.WriteLine("insert (money) - Money put into money slot");
-            Console.WriteLine("order (coke, sprite, fanta) - Order from machines buttons");
-            Console.WriteLine("sms order (coke, sprite, fanta) - Order sent by sms");
-            Console.WriteLine("recall - gives money back");
-            Console.WriteLine("-------");
-            Console.WriteLine("Inserted money: " + money);
-            Console.WriteLine("-------\n\n");
-        }
-
-        private void AddToCredit(string input)
-        {
-            var amount = int.Parse(input.Split(' ')[1]);
-            money += amount;
-            Console.WriteLine("Adding " + amount + " to credit");
-        }
-
-        private void TryToServe(Soda soda, bool sms = false)
-        {
-            if (soda.Amount == 0)
-            {
-                Console.WriteLine($"No {soda.Name} left");
-            } 
-            else if (!sms && money < soda.Price)
-            {
-                Console.WriteLine("Need " + (soda.Price - money) + " more money");
-            } 
-            else
-            {
-                soda.Amount--;
-                Console.WriteLine($"Giving {soda.Name} out");
-                if (sms)
-                    return;
-
-                Console.WriteLine("Giving " + (money - soda.Price) + " out in change");
-                money = 0;
-            }
-        }
     }
+
     public class Soda
     {
         public string Name { get; set; }
