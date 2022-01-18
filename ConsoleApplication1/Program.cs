@@ -44,14 +44,27 @@ namespace ConsoleApplication1
             Console.WriteLine($"Giving {soda.Name} out");
         }
 
-        private static void GiveChange(Soda soda)
+        private static void GiveChange(Soda soda, bool overtime)
         {
-            Console.WriteLine("Giving " + (money - soda.Price) + " out in change");
-            money = 0;
+            if (overtime)
+            {
+                Console.WriteLine("Keep the change you filthy animal");
+                return;
+            }
+
+            var change = money - soda.Price;
+            if (change != 0)
+            {
+                Console.WriteLine("Giving " + (money - soda.Price) + " out in change");
+                money = 0;
+            }
         }
 
-        private static void TryToServe(Soda soda, bool prepaid)
+        private static void TryToServe(Soda soda, string input)
         {
+            var prepaid = input.StartsWith("sms");
+            var overtime = input.Contains("overtime");
+
             if (soda.Amount == 0)
             {
                 Console.WriteLine($"No {soda.Name} left");
@@ -64,7 +77,7 @@ namespace ConsoleApplication1
             {
                 Serve(soda);
                 if (!prepaid)
-                    GiveChange(soda);
+                    GiveChange(soda, overtime);
             }
         }
 
@@ -92,7 +105,7 @@ namespace ConsoleApplication1
                     if (foundSoda == null)
                         Console.WriteLine("No such soda");
                     else
-                        TryToServe(foundSoda, input.StartsWith("sms"));
+                        TryToServe(foundSoda, input);
                 }
             }
         }

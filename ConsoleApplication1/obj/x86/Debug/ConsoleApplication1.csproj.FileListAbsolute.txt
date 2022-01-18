@@ -1,0 +1,8 @@
+C:\code\SodaMachine\ConsoleApplication1\obj\x86\Debug\ConsoleApplication1.csproj.AssemblyReference.cache
+C:\code\SodaMachine\ConsoleApplication1\obj\x86\Debug\ConsoleApplication1.csproj.SuggestedBindingRedirects.cache
+C:\code\SodaMachine\ConsoleApplication1\obj\x86\Debug\ConsoleApplication1.csproj.CoreCompileInputs.cache
+C:\code\SodaMachine\ConsoleApplication1\bin\Debug\ConsoleApplication1.exe.config
+C:\code\SodaMachine\ConsoleApplication1\bin\Debug\ConsoleApplication1.exe
+C:\code\SodaMachine\ConsoleApplication1\bin\Debug\ConsoleApplication1.pdb
+C:\code\SodaMachine\ConsoleApplication1\obj\x86\Debug\ConsoleApplication1.exe
+C:\code\SodaMachine\ConsoleApplication1\obj\x86\Debug\ConsoleApplication1.pdb
